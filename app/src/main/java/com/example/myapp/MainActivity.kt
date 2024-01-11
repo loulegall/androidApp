@@ -1,5 +1,6 @@
 package com.example.myapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.widget.Button
@@ -23,6 +24,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
+    private val REQUEST_MODIFY_SHORTCUT = 1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -45,8 +48,9 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        val fab: FloatingActionButton = binding.appBarMain.fab
-        fab.setImageResource(android.R.drawable.ic_input_add) // Change l'icône à "+"
+        val fab: FloatingActionButton = binding.appBarMain.fab.also {
+            it.setImageResource(android.R.drawable.ic_input_add)
+        } // Change l'icône à "+"
         fab.setOnClickListener { view ->
             // Afficher la pop-up ici
             showCreateStreamDeckDialog()
@@ -85,7 +89,6 @@ class MainActivity : AppCompatActivity() {
 
         val alertDialog = builder.create()
 
-        // Ajoutez des boutons supplémentaires à la boîte de dialogue
         val modifyNameButton = Button(this)
         modifyNameButton.text = "Modifier Nom"
 
@@ -97,15 +100,13 @@ class MainActivity : AppCompatActivity() {
         linearLayout.addView(modifyNameButton)
         linearLayout.addView(modifyShortcutButton)
 
-        modifyNameButton.setOnClickListener {
-            // Implémentez ici la logique pour modifier le nom
-            // Vous pouvez ouvrir une nouvelle activité ou une boîte de dialogue pour cela
-            alertDialog.dismiss()
+        modifyShortcutButton.setOnClickListener {
+            val intent = Intent(this, ModifyShortcutActivity::class.java)
+            startActivityForResult(intent, REQUEST_MODIFY_SHORTCUT)
         }
 
-        modifyShortcutButton.setOnClickListener {
-            // Implémentez ici la logique pour modifier le raccourci
-            // Vous pouvez ouvrir une nouvelle activité ou une boîte de dialogue pour cela
+        modifyNameButton.setOnClickListener {
+            // TODO : Ajouter page de modification du nom
             alertDialog.dismiss()
         }
 
